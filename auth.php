@@ -1,25 +1,27 @@
 <?php 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Check credentials with data in database
-function login($username, $password) {
-    global $connect;
+function login($username, $password, $pdo) {
+    try {
+        // Secure query (fetch hashed password only)
+        $sql = "SELECT id, username, pass FROM students WHERE username = :username";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['username' => $username]); // Bind parameter
 
-    // Secure query (fetch hashed password only)
-    $sql = "SELECT id, Password FROM student WHERE Username=?";
-    $stmt = $connect->prepare($sql);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Verify password securely
-    if ($user && password_verify($password, $user['Password'])) {
-        session_regenerate_id(true); // Prevent session fixation
-        $_SESSION['user_id'] = $user['id'];
-        return true;
-    } 
-    return false;
+        // Verify password securely
+        if ($user && password_verify($password, $user['pass'])) {
+            session_regenerate_id(true); // Prevent session fixation
+            return $user; // Return the user data
+        }
+        return false;
+    } catch (PDOException $e) {
+        die("Query failed: " . $e->getMessage());
+    }
 }
 
 // Check whether user is logged in
@@ -28,22 +30,21 @@ function check_login() {
 }
 
 // Fetch the current user (ensure proper security)
-function current_user() {
-    global $connect;
+function current_user($pdo) {
     if (check_login()) {
-        $sql = "SELECT student.*, exam.id AS exam_id, exam.name AS exam_name, exam.exam_date
-                FROM student 
-                LEFT JOIN exam_student ON student.id = exam_student.student_id
-                LEFT JOIN exam ON exam.id = exam_student.exam_id
-                WHERE student.id=?
-                ORDER BY exam.exam_date DESC 
+        $sql = "SELECT students.*, exams.id AS exam_id, exams.exam_name AS exam_name, exams.exam_date
+                FROM students 
+                LEFT JOIN exam_students ON students.id = exam_students.student_id
+                LEFT JOIN exams ON exams.id = exam_students.exam_id
+                WHERE students.id = ?
+                ORDER BY exams.exam_date DESC 
                 LIMIT 1";
-        $stmt = $connect->prepare($sql);
-        $stmt->bind_param("i", $_SESSION['user_id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
         
-        return $result->num_rows ? $result->fetch_assoc() : null;
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $_SESSION['user_id'], PDO::PARAM_INT); 
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     return null;
 }
