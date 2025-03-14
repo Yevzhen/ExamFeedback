@@ -10,7 +10,7 @@ if (!check_login()) {
     exit();
 }
 
-$user = current_user();
+$user = current_user($pdo);
 
 // Generate CSRF token to prevent Cross-Site Request Forgery
 if (!isset($_SESSION['csrf_token'])) {
@@ -85,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <h2>Feedback Form</h2>
     <form method="POST">
-        <p><strong>Username:</strong> <?php echo htmlspecialchars($user['Username']); ?></p>
-        <p><strong>Student Name:</strong> <?php echo htmlspecialchars($user['FirstName'] . ' ' . $user['LastName']); ?></p>
+        <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
+        <p><strong>Student Name:</strong> <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></p>
         <p><strong>Exam Name:</strong> <?php echo htmlspecialchars($user['exam_name']); ?></p>
         <p><strong>Exam Date:</strong> <?php echo htmlspecialchars($user['exam_date']); ?></p>
         <input type="hidden" name="exam_id" value="<?php echo $user['exam_id']; ?>"><br>
