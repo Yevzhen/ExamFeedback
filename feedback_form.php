@@ -6,7 +6,7 @@ include 'auth.php';
 
 // Redirect if not logged in
 if (!check_login()) {
-    header('Location: login.php');
+    header('Location: index.php');
     exit();
 }
 
