@@ -39,10 +39,12 @@ This is a secure PHP-based web application that allows students to submit feedba
 
 ## Usage
 
-1. Login as a student.
+1. Sign Up / Log In as a student.
 
 2. Select an exam question's number and provide feedback.
 
 3. Submit the form to save feedback.
 
 4. Receive confirmation message on successful submission.
+
+5. Logout when finished.
