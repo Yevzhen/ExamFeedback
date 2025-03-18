@@ -116,5 +116,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php if (isset($error)): ?>
         <p style="color: red;"><?php echo $error; ?></p>
     <?php endif; ?>
+
+    <!-- Logout Form -->
+    <?php if (isset($_SESSION["user_id"])) { ?>
+        <h3>Logout</h3>
+        <form action="logout.php" method="post">
+        <button>Logout</button>
+        </form>
+    <?php } ?>
+    
 </body>
 </html>
