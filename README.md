@@ -23,7 +23,7 @@ This is a secure PHP-based web application that allows students to submit feedba
 
 <b>Frontend:</b> HTML
 
-<b>Security:</b> Prepared Statements (bind_param) to prevent SQL injection, htmlspecialchars() for XSS protection, CSRF token to prevent Cross-Site Request Forgery.
+<b>Security:</b> Prepared Statements to prevent SQL injection, htmlspecialchars() for XSS protection, CSRF token to prevent Cross-Site Request Forgery.
 
 ## Installation
 
