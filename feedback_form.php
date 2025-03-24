@@ -58,14 +58,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Prepare the SQL query
         $sql = "INSERT INTO feedback (exam_id, stud_id, quest_no, not_covered, unclear, more_than_2, no_correct, narrative) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $connect->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
         // Check if prepare() failed
         if (!$stmt) {
-            die("SQL error: " . $connect->error);
+            die("SQL error: " . $pdo->errorInfo()[2]);
         }
 
-        $stmt->bind_param("iiiiiiis", $exam_id, $stud_id, $quest_no, $not_covered, $unclear, $more_than_2, $no_correct, $narrative);
+        $stmt->bindValue(":exam_id", $exam_id, PDO::PARAM_INT);
+        $stmt->bindValue(":stud_id", $stud_id, PDO::PARAM_INT);
+        $stmt->bindValue(":quest_no", $quest_no, PDO::PARAM_INT);
+        $stmt->bindValue(":not_covered", $not_covered, PDO::PARAM_INT);
+        $stmt->bindValue(":unclear", $unclear, PDO::PARAM_INT);
+        $stmt->bindValue(":more_than_2", $more_than_2, PDO::PARAM_INT);
+        $stmt->bindValue(":no_correct", $no_correct, PDO::PARAM_INT);
+        $stmt->bindValue(":narrative", $narrative, PDO::PARAM_STR);
+
         $stmt->execute();
 
         $success = "Feedback submitted successfully!";
