@@ -93,6 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <h2>Feedback Form</h2>
     <form method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        
         <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
         <p><strong>Student Name:</strong> <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></p>
         <p><strong>Exam Name:</strong> <?php echo htmlspecialchars($user['exam_name']); ?></p>
