@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Prepare the SQL query
         $sql = "INSERT INTO feedback (exam_id, stud_id, quest_no, not_covered, unclear, more_than_2, no_correct, narrative) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                VALUES (:exam_id, :stud_id, :quest_no, :not_covered, :unclear, :more_than_2, :no_correct, :narrative)";
         $stmt = $pdo->prepare($sql);
 
         // Check if prepare() failed
